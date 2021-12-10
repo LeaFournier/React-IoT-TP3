@@ -2,42 +2,55 @@ import logo from './logo.svg';
 import './App.css';
 import InstantHeartrate from './component/instantHeartrate';
 import { useEffect, useState } from 'react';
+import Graph from './component/LineChart';
 
 function randomBpm() {
   return Math.floor(Math.random() * 160) + 40;
 }
 
 function App() {
-  const [measurement, setMeasurement] = useState([50]);
+  const [bpms, setBpms] = useState([50]);
 
   useEffect(() => {
+  //setInterval(() => {
+  //setBpms((prev) => [...prev, bpms]);
+//}, 2000);
+//}
     setInterval(() => {
-    const bpm = { timestamp: new Date().getTime(),
-      hearthrate: randomBpm(),
-    };
-    setMeasurement((prev) => [...prev, bpm]);
-  }, 5000)
-}, []) 
-     
-    const bpm = measurement[measurement.length - 1 ];
+      setBpms((prev) => {
+      const bpm = {
+      timestamp: new Date().getTime(),
+      heartrate: randomBpm(),
+      };
+       return [...prev, bpm];
+    });
+    }, 5000)
+}, []);
 
-    console.log(measurement);
+  //useEffect(() => {
+  //const client = mqtt.connect(MQTT_broker_url);
+  //client.on('message', (topic, message)) => {
+    //setBpms((prev) => [...prev, parseMessage(message)]);
+  //});
+  //client.subscribe('heartrate');
+  //client.publish('clients','BF');
+  //return() => client.end();
+  //}, [];
 
-    console.log(bpm.timestamp);
- 
+  const bpm = bpms[bpms.length - 1 ];
+
+  console.log(bpms);
+
   return (
     <div className="App">
       <header className="App-header">
-      <h1>
-          Heartrate Monitoring
-      </h1>
+        <p>Monitoring de rythme cardiaque</p>
         <img src={logo} className="App-logo" alt="logo" />
-        <InstantHeartrate data={bpm.hearthrate} />
+        <InstantHeartrate data={bpm.heartrate} />
+        <Graph data={bpms} />
       </header>
     </div>
   );
-
-
 }
 
 export default App;
